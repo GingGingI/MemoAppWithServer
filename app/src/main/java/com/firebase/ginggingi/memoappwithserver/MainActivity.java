@@ -122,4 +122,14 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             Toast.makeText(this, ToastStr, Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void DataDeleted(boolean isDataDeleted) {
+        if (isDataDeleted){
+            getJsons();
+            Toast.makeText(this, "데이터 삭제..!", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "삭제 실패..?", Toast.LENGTH_SHORT).show();
+        }
+
+    }
 }

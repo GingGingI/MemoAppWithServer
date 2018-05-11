@@ -5,8 +5,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.firebase.ginggingi.memoappwithserver.Interfaces.UpdateDataModel;
-import com.firebase.ginggingi.memoappwithserver.MemoUpdateActivity;
+import com.firebase.ginggingi.memoappwithserver.Interfaces.DeleteDataModel;
+import com.firebase.ginggingi.memoappwithserver.MainActivity;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,39 +18,35 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 /**
- * Created by GingGingI on 2018-04-15.
+ * Created by GingGingI on 2018-05-11.
  */
 
-public class UpdateMemoData implements UpdateDataModel{
-
-    private MemoUpdateActivity MUActivity;
-    public boolean isWorking = false;
+public class DeleteMemoData implements DeleteDataModel {
     private int idx;
-    private String title,content;
+    private MainActivity mActivity;
+    public boolean isWorking = false;
 
     @Override
-    public void InitData(int idx, String title, String content, Context context) {
+    public void InitData(int idx, Context context) {
         this.idx = idx;
-        this.title = title;
-        this.content = content;
-        MUActivity = (MemoUpdateActivity) context;
+        this.mActivity = (MainActivity) context;
     }
 
     @Override
-    public void UpdateData() {
-        new UpdateDataTask().execute();
+    public void DeleteData() {
+        new DelTask().execute();
     }
 
     @Override
-    public boolean ChkIsValidData(String s) {
-        if (s.equals("200\n")){
+    public boolean ChkIsDataExist(String s) {
+        if (s.equals("200\n")) {
             return true;
-        }else {
+        }else{
             return false;
         }
     }
 
-    class UpdateDataTask extends AsyncTask<Void, Void, String> {
+    class DelTask extends AsyncTask<Void, Void, String> {
 
         @Override
         protected void onPreExecute() {
@@ -64,16 +60,10 @@ public class UpdateMemoData implements UpdateDataModel{
             BufferedReader br = null;
             String result = null;
             try {
-                String data = URLEncoder.encode("title", "UTF-8")
-                        + "=" + URLEncoder.encode(title, "UTF-8");
+                String data = URLEncoder.encode("idx", "UTF-8")
+                        + "=" + URLEncoder.encode(Integer.toString(idx), "UTF-8");
 
-                data += "&" + URLEncoder.encode("content", "UTF-8")
-                        + "=" + URLEncoder.encode(content, "UTF-8");
-
-                data += "&" + URLEncoder.encode("idx", "UTF-8")
-                        + "=" + URLEncoder.encode( Integer.toString(idx), "UTF-8");
-
-                URL url = new URL("http://10.0.2.2:8000/updateData.php/");
+                URL url = new URL("http://10.0.2.2:8000/deleteData.php/");
                 conn = (HttpURLConnection) url.openConnection();
                 conn.setDoOutput(true);
 
@@ -104,13 +94,14 @@ public class UpdateMemoData implements UpdateDataModel{
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
+            ChkIsDataExist(s);
             isWorking = false;
-            if (ChkIsValidData(s)){
-                MUActivity.DataUpdated(true);
+            if (ChkIsDataExist(s)){
+                mActivity.DataDeleted(true);
             }else{
-                Log.i("SendMemo :", "DataSendError");
-                Toast.makeText(MUActivity, s, Toast.LENGTH_SHORT).show();
-                MUActivity.DataUpdated(false);
+                Log.i("DeleteMemo :", "DataDeleteError -> " + s);
+                Toast.makeText(mActivity, s, Toast.LENGTH_SHORT).show();
+                mActivity.DataDeleted(false);
             }
         }
     }
