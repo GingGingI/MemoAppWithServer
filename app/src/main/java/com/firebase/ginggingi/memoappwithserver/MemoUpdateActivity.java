@@ -58,7 +58,6 @@ public class MemoUpdateActivity extends AppCompatActivity implements View.OnClic
         Contentview.setText(content);
         DateView.setText(date);
 
-
         Toast.makeText(this, idx+".", Toast.LENGTH_SHORT).show();
     }
 

@@ -77,7 +77,6 @@ public class GetJson implements GetJsonModel{
             BufferedReader buffReader = null;
             HttpURLConnection urlConn = null;
             InputStream is = null;
-
             StringBuffer sb = new StringBuffer();
             try{
                 URL HttpUrl = new URL(url);
@@ -87,7 +86,7 @@ public class GetJson implements GetJsonModel{
                 buffReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 String lines = null;
 
-                while((lines = buffReader.readLine()) != null){
+                while((lines =  buffReader.readLine()) != null){
                     Log.i(TAG, lines);
                     sb.append(lines);
                 }

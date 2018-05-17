@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         GJson = new GetJson();
         GJson.InitDatas("http://10.0.2.2:8000", this);
         GJson.ParseJsonFromURL();
-        //GetJson 클래스를 실행
+        //GetJson 클래스를 실
     }
 
     public void IsGetJsonArr(){
